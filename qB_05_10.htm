@@ -1,0 +1,76 @@
+<div class="hotspot-wrapper">
+  <div class="clickHotspot">
+    <button type="button" id="hotspotButton" onclick="showQuestion()">Q</button>
+  </div>
+  <div class="question-wrapper">
+    <div class="question-header">Fråga</div>
+    <div class="question-subheader">
+      Varför ges injektion Cyklokapron (Tranexamsyra).
+    </div>
+    <div class="question-content question-typeRadio">
+      <div class="question-unit">
+        <input type="checkbox" id="c2">
+        <label for="c2">Tranexamsyra är syrebärande och ökar vävnadernas syreupptag.</label><br />
+        <input type="checkbox" id="c1">
+        <label for="c1">Tranexamsyra är en fibrinolyshämmare som minskar blödning genom stabilisering av koagler.</label><br />
+      </div>
+    </div>
+    <div class="question-footer">
+      <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
+      <div class="question-evaluation">
+        <div class="question-evaluation-notice"></div>
+        <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // Flags
+  var correct = false;
+
+  function showQuestion() {
+    player.play();
+    $(".hotspot-wrapper").css({"width":"500px", "height":"auto"});
+    $(".question-wrapper").css("display", "block");
+    $(".clickHotspot").css("display", "none");
+    setTimeout(function() { player.pause(); }, 100);
+    recordInteraction("showQuestion", "Film B Question B1");
+    toggleRecording(true);
+  }
+
+  function checkQuestion() {
+    $("#checkButton").css("display", "none");
+    var c1 = document.getElementById("c1").checked ? 1 : 0;
+    var c2 = document.getElementById("c2").checked ? 1 : 0;
+    // Evaluate
+    var sum = c1 - c2;
+    if(sum < 1) {
+      $(".question-evaluation-notice").html("Wrong!");
+      recordInteraction("checkQuestion", "Film B Question B1", "wrong");
+      correct = false;
+    } else {
+      $(".question-evaluation-notice").html("Correct!");
+      recordInteraction("checkQuestion", "Film B Question B1", "correct");
+      correct = true;
+    }
+    $(".question-evaluation").css("display", "block");
+  }
+
+  function showNext() {
+    $(".hotspot-wrapper").css("display", "none");
+    player.pnlmViewer.removeHotSpot("qB_05_10");
+    playButton.style.display = "block";
+    recordInteraction("showNext", "Film B Question B1");
+    recordSpeech("Film B Question B1");
+    if(!correct) {
+      currentVideo = "videoA";
+      player.src({type: "video/mp4", src: "videoA.mp4"});
+      player.currentTime(782);
+    }
+    player.play();
+  }
+
+</script>

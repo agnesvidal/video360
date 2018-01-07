@@ -1,0 +1,92 @@
+<div id="qA_02_47-wrapper" class="hotspot-wrapper">
+  <div class="clickHotspot">
+    <button type="button" id="hotspotButton" onclick="showQuestion()">Q</button>
+  </div>
+  <div class="question-wrapper">
+    <div class="question-header">Fråga</div>
+    <div class="question-subheader">
+      Vilket bör målvärdet vara för Robins systoliska blodtryck?
+    </div>
+    <div class="question-content question-typeRadio">
+      <div class="question-unit">
+        <input type="checkbox" id="c1">
+        <label for="c1">90-100 för att tillgodose adekvat perfusion till hjärnan.</label><br />
+        <input type="checkbox" id="c2">
+        <label for="c2">120 för att sträva efter ett normaliserat blodtryck.</label><br />
+        <input type="checkbox" id="c3">
+        <label for="c3">70-90 för att minska risk för blödning.</label>
+      </div>
+    </div>
+    <div class="question-footer">
+      <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
+      <div class="question-evaluation">
+        <div class="question-evaluation-notice"></div>
+        <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
+        <!--<button type="button" id="againButton" onclick="tryAgain()">Try again</button>
+        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>-->
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // Flags
+  var correct = false;
+
+  function showQuestion() {
+    player.play();
+    $(".hotspot-wrapper").css({"width": "500px", "height": "auto"});
+    $(".question-wrapper").css("display", "block");
+    $(".clickHotspot").css("display", "none");
+    setTimeout(function() { player.pause(); }, 100);
+    recordInteraction("showQuestion", "Film A Question A2");
+    toggleRecording(true);
+  }
+
+  function checkQuestion() {
+    $("#checkButton").css("display", "none");
+    var c1 = document.getElementById("c1").checked ? 1 : 0;
+    var c2 = document.getElementById("c2").checked ? 1 : 0;
+    var c3 = document.getElementById("c3").checked ? 1 : 0;
+    var sum = c1 - c2 - c3;
+    if(sum < 1) {
+      $(".question-evaluation-notice").html("Wrong!");
+      recordInteraction("checkQuestion", "Film A Question A2", "wrong");
+      correct = false;
+    } else {
+      $(".question-evaluation-notice").html("Correct!");
+      recordInteraction("checkQuestion", "Film A Question A2", "correct");
+      correct = true;
+    }
+    $(".question-evaluation").css("display", "block");
+  }
+
+  function showSolution() {
+    document.getElementById("c1").checked = true;
+    document.getElementById("c2").checked = false;
+    document.getElementById("c3").checked = false;
+    recordInteraction("showSolution", "Film A Question A2");
+  }
+
+  function tryAgain() {
+    document.getElementById("c1").checked = false;
+    document.getElementById("c2").checked = false;
+    document.getElementById("c3").checked = false;
+    correct = false;
+    $("#checkButton").css("display", "inline-block");
+    $(".question-evaluation").css("display", "none");
+    recordInteraction("tryAgain", "Film A Question A2");
+  }
+
+  function showNext() {
+    $(".hotspot-wrapper").css("display", "none");
+    player.pnlmViewer.removeHotSpot("qA_02_47");
+    playButton.style.display = "block";
+    recordInteraction("showNext", "Film A Question A2");
+    recordSpeech("Film A Question A2");
+    player.play();
+  }
+
+</script>

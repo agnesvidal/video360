@@ -1,0 +1,46 @@
+<div id="qA_03_09-wrapper" class="hotspot-wrapper">
+  <div class="clickHotspot">
+    <button type="button" id="hotspotButton" onclick="showQuestion()">Q</button>
+  </div>
+  <div class="question-wrapper">
+    <div class="question-header">Fråga</div>
+    <div class="question-subheader">
+      Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.
+    </div>
+    <div class="question-footer">
+      <button type="button" id="checkButton">Check</button>
+      <div class="question-evaluation">
+        <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // Flags
+  var correct = false;
+
+  function showQuestion() {
+    player.play();
+    $(".hotspot-wrapper").css({"width":"500px", "height":"auto"});
+    $(".question-wrapper").css("display", "block");
+    $(".clickHotspot").css("display", "none");
+    $("#checkButton").css("display", "none");
+    $(".question-evaluation").css("display", "block");
+    setTimeout(function() { player.pause(); }, 100);
+    recordInteraction("showQuestion", "Film A Question A1b");
+    toggleRecording(true);
+  }
+
+  function showNext() {
+    $(".hotspot-wrapper").css("display", "none");
+    player.pnlmViewer.removeHotSpot("qA_03_09");
+    playButton.style.display = "block";
+    recordInteraction("showNext", "Film A Question A1b");
+    recordSpeech("Film A Question A1b");
+    player.play();
+  }
+
+</script>

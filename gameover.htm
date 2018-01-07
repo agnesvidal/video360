@@ -1,0 +1,22 @@
+<div class="hotspot-wrapper">
+  <div class="clickHotspot">
+    <button type="button" id="hotspotButton" onclick="goBack()">↻</button>
+  </div>
+</div>
+
+<script>
+
+  function goBack() {
+    $(".clickHotspot").css("display", "none");
+    $(".hotspot-wrapper").css("display", "none");
+    player.pnlmViewer.removeHotSpot("qA_13_24");
+    recordInteraction("Game Over", "Retry");
+    currentVideo = "videoA";
+    player.src({type: "video/mp4", src: "videoA.mp4"});
+    player.currentTime(goBackTime);
+    goBackTime = 0;
+    gameover = false;
+    player.play();
+  }
+
+</script>

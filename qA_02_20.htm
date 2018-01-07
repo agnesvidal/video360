@@ -1,0 +1,72 @@
+<div id="qA_02_20-wrapper" class="hotspot-wrapper">
+  <div class="clickHotspot">
+    <button type="button" id="hotspotButton" onclick="showQuestion()">Q</button>
+  </div>
+  <div class="question-wrapper">
+    <div class="question-header">Fråga</div>
+    <div class="question-subheader">
+      Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?
+    </div>
+    <div class="question-content question-typeRadio">
+      <img style="display: block; width: 200px; margin: 0 auto;" src="image01.png" />
+      <div class="question-unit">
+        <input type="checkbox" id="c1">
+        <label for="c1">Sändaren säger <b>vad</b> som ska göras och <b>vem</b> som ska göra det (med namn och ögonkontakt). Mottagaren <b>upprepar</b> vad hen uppfattat och <b>informerar</b> sändaren när uppgiften är utförd. Sändaren bekräftar att hen uppfattat att uppgiften är utförd.</label><br />
+        <input type="checkbox" id="c2">
+        <label for="c2">Sändaren säger <b>vad</b> som ska göras så och den som har tid utför uppgiften. Mottagaren som har utfört uppgiften <b>antecknar</b> i akutjournalen så att det i <b>efterhand</b> ska gå att se vad som är utfört.</label><br />
+      </div>
+    </div>
+    <div class="question-footer">
+      <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
+      <div class="question-evaluation">
+        <div class="question-evaluation-notice"></div>
+        <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // Flags
+  var correct = false;
+
+  function showQuestion() {
+    player.play();
+    $(".hotspot-wrapper").css({"width":"500px", "height":"auto"});
+    $(".question-wrapper").css("display", "block");
+    $(".clickHotspot").css("display", "none");
+    setTimeout(function() { player.pause(); }, 100);
+    recordInteraction("showQuestion", "Film A Question A1");
+    toggleRecording(true);
+  }
+
+  function checkQuestion() {
+    $("#checkButton").css("display", "none");
+    var c1 = document.getElementById("c1").checked ? 1 : 0;
+    var c2 = document.getElementById("c2").checked ? 1 : 0;
+    // Evaluate
+    var sum = c1 - c2;
+    if(sum < 1) {
+      $(".question-evaluation-notice").html("Wrong!");
+      recordInteraction("checkQuestion", "Film A Question A1", "wrong");
+      correct = false;
+    } else {
+      $(".question-evaluation-notice").html("Correct!");
+      recordInteraction("checkQuestion", "Film A Question A1", "correct");
+      correct = true;
+    }
+    $(".question-evaluation").css("display", "block");
+  }
+
+  function showNext() {
+    $(".hotspot-wrapper").css("display", "none");
+    player.pnlmViewer.removeHotSpot("qA_02_20");
+    playButton.style.display = "block";
+    recordInteraction("showNext", "Film A Question A1");
+    recordSpeech("Film A Question A1");
+    player.play();
+  }
+
+</script>
