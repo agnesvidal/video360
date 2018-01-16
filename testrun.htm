@@ -28,7 +28,7 @@
           recognition.continuous = true;   //Suitable for dictation.
           recognition.interimResults = false;  //If we want to start receiving results even if they are not final.
           //Define some more additional parameters for the recognition:
-          recognition.lang = "en-US";
+          recognition.lang = "sv-SV";
           recognition.maxAlternatives = 1; //Since from our experience, the highest result is really the best...
       }
 
@@ -108,16 +108,17 @@
 
         function login() {
           //check if group name not empty
+            //url: "http://celtest1.lnu.se:3003/login",
           var group_name = $( "#group_name" ).val();
           if(group_name.length > 0){
             $.ajax({
-              url: "http://celtest1.lnu.se:3003/login",
-              type: "post",
-              data: {group_name: group_name},
-              success: function(message) {
-                //console.log(message);
-                group = message.group._id;
-                dialog.dialog("close");
+                url: "http://celtest1.lnu.se:3003/login",
+                type: "post",
+                data: {group_name: group_name},
+                success: function(message) {
+                  group = message.group;
+                  localStorage.setItem("groupId",message.group);
+                  dialog.dialog("close");
               },
               error: function(message) {
                 console.log(message);
@@ -183,19 +184,66 @@
         // Reference elements that needed setup
         playButton = document.getElementsByClassName("vjs-play-control vjs-control vjs-button")[0];
 
+
+        player.pnlmViewer.on('useractive',function () {
+            console.log("User active");
+
+
+
+        });
+
+
+
+          player.pnlmViewer.on('mousedown', function(event) {
+
+              console.log("mouse movement detected");
+
+
+
+              // Save statistic data
+              var cameraMovements = {
+                  "id" : localStorage.getItem("groupId"),
+                  // getDeviceOrientationStatus() is a custom function in pannellum.js!
+                  "deviceOrientation" : player.pnlmViewer.getDeviceOrientationStatus(),
+                  "pitch" : player.pnlmViewer.getPitch(),
+                  "yaw" : player.pnlmViewer.getYaw(),
+                  "mouseLocationCords":player.pnlmViewer.mouseEventToCoords(event),
+                  "timeline" : player.currentTime(),
+                  "timestamp" : Date.now()
+              };
+
+              upload(cameraMovements,null,null);
+
+          });
+
+
+
+
+          var oldPitch = 0;
+          var oldYaw =0;
         // Listen to timeupdates
         player.on('timeupdate', function() {
 
-          // Save statistic data
-          cameraMovements.push({
-            "id" : group,
-            // getDeviceOrientationStatus() is a custom function in pannellum.js!
-            "deviceOrientation" : player.pnlmViewer.getDeviceOrientationStatus(),
-            "pitch" : player.pnlmViewer.getPitch(),
-            "yaw" : player.pnlmViewer.getYaw(),
-            "time" : player.currentTime(),
-            "date" : Date()
-          });
+
+          if(oldPitch!=player.pnlmViewer.getPitch() || oldYaw!=player.pnlmViewer.getYaw()){
+              console.log("changed pitch or yaw is detected");
+              oldPitch = player.pnlmViewer.getPitch();
+              oldYaw = player.pnlmViewer.getYaw();
+
+              // Save statistic data
+              var cameraMovements = {
+                  "id" : localStorage.getItem("groupId"),
+                  // getDeviceOrientationStatus() is a custom function in pannellum.js!
+                  "deviceOrientation" : player.pnlmViewer.getDeviceOrientationStatus(),
+                  "pitch" : player.pnlmViewer.getPitch(),
+                  "yaw" : player.pnlmViewer.getYaw(),
+                  "mouseLocationCords":[0,0],
+                  "timeline" : player.currentTime(),
+                  "timestamp" : Date.now()
+              };
+
+              upload(cameraMovements,null,null);
+          }
 
           // Question A1 on videoA at 2:18
           if(this.currentTime() > 138.0 && this.currentTime() < 139.0
@@ -610,40 +658,43 @@
         var action = action || "none";
         var questionID = questionID || "none";
         var evaluation = evaluation || "none";
-        // Save statistic data
-        videoInteractions.push({
+        // Send statistic data to server
+        var videoInteractions = {
           "id" : group,
           "action" : action,
-          "questionID" : questionID,
+          "questionId" : questionID,
           "evaluation" : evaluation,
-          "time" : player.currentTime(),
-          "date" : Date()
-        });
+          "timeline" : player.currentTime(),
+          "timestamp" : Date.now()
+        };
+       upload(null,videoInteractions,null)
       }
 
       // Save speech to text gibberish
       function recordSpeech(questionID) {
         toggleRecording(false);
-        speechRecordings.push({
+
+        var speechRecordings = {
           "id" : group,
-          "questionID" : questionID,
+          "questionId" : questionID,
           "transcript" : final_transcript,
-          "time" : player.currentTime(),
-          "date" : Date()
-        });
+          "timeline" : player.currentTime(),
+          "timestamp" : Date.now()
+        };
+        upload(null,null,speechRecordings);
         final_transcript = "";
       }
 
       // Send to database
-      function upload() {
+      function upload(cameraMovements,videoInteractions,speechRecordings) {
         var uploadData = {
-          "groupID" : group,
-          "cameraData" : cameraMovements,
-          "interactionData" : videoInteractions,
-          "speechData" : speechRecordings,
+          "groupId" : localStorage.getItem("groupId"),
+          "cameraData" : JSON.stringify(cameraMovements),
+          "interactionData" : JSON.stringify(videoInteractions),
+          "speechData" : JSON.stringify(speechRecordings),
           "video" : "Demo"
         };
-        console.log(uploadData);
+        console.log(JSON.stringify(uploadData));
         $.ajax({
           url: "http://celtest1.lnu.se:3003/savedata",
           type: "post",
