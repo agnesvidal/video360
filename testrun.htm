@@ -15,11 +15,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
     <link rel="stylesheet" href="360.css"/>
     <script>
-      /*window.addEventListener("beforeunload", function (e) {
-        var confirmationMessage = "Upload your data, foolish mortal?!";
-        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-        return confirmationMessage;                            //Webkit, Safari, Chrome
-      });*/
+
 
       if (!('webkitSpeechRecognition' in window)) {
           //Speech API not supported here…
@@ -71,6 +67,7 @@
         <fieldset>
           <label for="group_name">Group Name</label>
           <input type="text" name="group_name" id="group_name" class="text ui-widget-content ui-corner-all">
+          <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all">
           <!-- Allow form submission with keyboard without duplicating the dialog button -->
           <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
         </fieldset>
@@ -110,7 +107,11 @@
           //check if group name not empty
             //url: "http://celtest1.lnu.se:3003/login",
           var group_name = $( "#group_name" ).val();
-          if(group_name.length > 0){
+          var password = $( "#password" ).val();
+
+
+
+          if(group_name.length > 0 && password === "LNU"){
             $.ajax({
                 url: "http://celtest1.lnu.se:3003/login",
                 type: "post",
@@ -126,7 +127,7 @@
             });
           }
           else{
-            alert("Please enter the group name");
+            alert("Please enter the group name and correct password");
           }
 
           return false;
