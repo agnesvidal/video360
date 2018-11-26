@@ -10,15 +10,15 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Hypotermi</label><br />
+        <label for="c1" id="c1Label">Hypotermi</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Alkalos</label><br />
+        <label for="c2" id="c2Label">Alkalos</label><br />
         <input type="checkbox" id="c3">
-        <label for="c3">Acidos</label><br />
+        <label for="c3" id="c3Label">Acidos</label><br />
         <input type="checkbox" id="c4">
-        <label for="c4">Koagulopati</label><br />
+        <label for="c4" id="c4Label">Koagulopati</label><br />
         <input type="checkbox" id="c5">
-        <label for="c5">Hypertermi</label><br />
+        <label for="c5" id="c5Label">Hypertermi</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -26,8 +26,8 @@
       <div class="question-evaluation">
         <div class="question-evaluation-notice"></div>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
-        <!--<button type="button" id="againButton" onclick="tryAgain()">Try again</button>
-        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>-->
+        <!--<button type="button" id="againButton" onclick="tryAgain()">Try again</button>-->
+        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>
         <div style="clear: both;"></div>
       </div>
     </div>
@@ -45,25 +45,34 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A  Question A7");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7");
+
   }
 
   function checkQuestion() {
     $("#checkButton").css("display", "none");
-    var c1 = document.getElementById("c1").checked ? 1 : 0;
+
+    var c1 = document.getElementById("c1").checked ? 1  : 0;
     var c2 = document.getElementById("c2").checked ? 1 : 0;
     var c3 = document.getElementById("c3").checked ? 1 : 0;
     var c4 = document.getElementById("c4").checked ? 1 : 0;
     var c5 = document.getElementById("c5").checked ? 1 : 0;
+
+    var answer='';
+    if(c1===1) answer+= document.getElementById("c1Label").textContent;
+    if(c2===1) answer+= ";" + document.getElementById("c2Label").textContent;
+    if(c3===1) answer+= ";" + document.getElementById("c3Label").textContent;
+    if(c4===1) answer+= ";" + document.getElementById("c4Label").textContent;
+    if(c5===1) answer+= ";" + document.getElementById("c5Label").textContent;
+
     var sum = c1 - c2 + c3 + c4 - c5;
     if(sum < 3) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A  Question A7", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7", "false",answer);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A  Question A7", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7", "true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -75,7 +84,7 @@
     document.getElementById("c3").checked = true;
     document.getElementById("c4").checked = true;
     document.getElementById("c5").checked = false;
-    recordInteraction("showSolution", "Film A  Question A7");
+    recordInteraction("showSolution", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7");
   }
 
   function tryAgain() {
@@ -94,8 +103,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_12_08");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A  Question A7");
-    recordSpeech("Film A  Question A7");
+    recordHotspotInteraction("showNext","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7");
+
     if(correct) {
       currentVideo = "videoB";
       player.src({type: "video/mp4", src: "videoB.mp4"});
