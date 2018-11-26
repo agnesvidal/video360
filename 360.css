@@ -171,3 +171,8 @@
   width: 50px;
   background-color: rgba(255, 0, 0, 0.5);
 }
+
+
+.form-control{
+  width: 190px;
+}
