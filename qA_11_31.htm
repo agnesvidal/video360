@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Varm, pga. kyla utvecklar koagulationsrubbning</label><br />
+        <label for="c1" id="c1Label">Varm, pga. kyla utvecklar koagulationsrubbning</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Sval, pga. värme utvecklar koagulationsrubbning</label><br />
+        <label for="c2" id="c2Label">Sval, pga. värme utvecklar koagulationsrubbning</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -37,8 +37,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A6");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Du vill att Robins kroppstemperatur är", "Film A Question A6");
+
   }
 
   function checkQuestion() {
@@ -48,12 +48,12 @@
     // Evaluate
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A Question A6", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+        recordHotspotInteraction("checkQuestion","Du vill att Robins kroppstemperatur är",  "Film A Question A6", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A Question A6", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+        recordHotspotInteraction("checkQuestion", "Du vill att Robins kroppstemperatur är", "Film A Question A6", "true"),document.getElementById("c1Label").textContent;
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_11_31");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A6");
-    recordSpeech("Film A Question A6");
+    recordHotspotInteraction("showNext", "Du vill att Robins kroppstemperatur är", "Film A Question A6");
+
     player.play();
   }
 
