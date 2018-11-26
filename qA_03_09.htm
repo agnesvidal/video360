@@ -30,17 +30,20 @@
     $("#checkButton").css("display", "none");
     $(".question-evaluation").css("display", "block");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A1b");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b");
+
   }
 
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_03_09");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A1b");
-    recordSpeech("Film A Question A1b");
-    player.play();
+    recordHotspotInteraction("showNext","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b");
+
+      recordHotspotInteraction("checkQuestion","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b", "true",document.getElementById("c1Label").textContent);
+
+
+      player.play();
   }
 
 </script>
