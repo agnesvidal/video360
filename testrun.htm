@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="360.css"/>
   <script>
       var SERVER_URL = "http://ansion.lnu.se/360Video";
-
+      //var SERVER_URL = "http://localhost:3004";
 
       setupScenarioList();
 
@@ -231,7 +231,14 @@
     var playButton;
 
     // Video.js setup
-    var player = videojs('panorama', {
+    var player = videojs('panorama',  {
+        controls:true,
+        preload:"auto",
+        controlBar: {
+            progressControl: {
+                keepTooltipsInside: true
+            }
+        },
         loop: false,
         plugins: {
             // Load Pannellum Plugin
@@ -269,7 +276,7 @@
         player.on('timeupdate', function() {
 
             // Question A1 on videoA at 2:18
-            if(this.currentTime() > 5.0 && this.currentTime() < 6.0
+            if(this.currentTime() > 138.0 && this.currentTime() < 139.0
                 && !qA_02_20
                 && currentVideo == "videoA") {
                 // Disable Hotspot creation for the future
