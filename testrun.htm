@@ -701,6 +701,8 @@
             evaluation:{correct:evaluation,answer:answer},
             timeline:player.currentTime()};
 
+        console.log(hotspotData);
+
         $.ajax({
             url: SERVER_URL + "/data/hotspots-interactions",
             type: "post",
