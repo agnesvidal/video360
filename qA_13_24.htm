@@ -10,25 +10,26 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Hur många personer behöver opereras/behandlas på operation.</label><br />
+        <label for="c1" id="c1Label">Hur många personer behöver opereras/behandlas på operation.</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Vilken operation?</label><br />
+        <label for="c2" id="c2Label">Vilken operation?</label><br />
         <input type="checkbox" id="c3">
-        <label for="c3">Vilken operationsmetod?</label><br />
+        <label for="c3" id="c3Label">Vilken operationsmetod?</label><br />
         <input type="checkbox" id="c4">
-        <label for="c4">Vem är operatör?</label><br />
+        <label for="c4" id="c4Label">Vem är operatör?</label><br />
         <input type="checkbox" id="c5">
-        <label for="c5">Hur ska patienten positioneras ex ryggläge, sidoläge.</label><br />
+        <label for="c5" id="c5Label">Hur ska patienten positioneras ex ryggläge, sidoläge.</label><br />
         <input type="checkbox" id="c6">
-        <label for="c6">Planerat hudsnitt.</label><br />
+        <label for="c6" id="c6Label">Planerat hudsnitt.</label><br />
         <input type="checkbox" id="c7">
-        <label for="c7">När förväntas patienten till operationsavdelningen.</label><br />
+        <label for="c7" id="c7Label">När förväntas patienten till operationsavdelningen.</label><br />
       </div>
     </div>
     <div class="question-footer">
       <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
       <div class="question-evaluation">
         <div class="question-evaluation-notice"></div>
+        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
         <div style="clear: both;"></div>
       </div>
@@ -47,8 +48,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A  Question A11");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11");
+
   }
 
   function checkQuestion() {
@@ -62,24 +63,45 @@
     var c7 = document.getElementById("c7").checked ? 1 : 0;
     // Evaluate
     var sum = c1 + c2 + c3 + c4 + c5 + c6 + c7;
+
+      var answer='';
+      if(c1===1) answer+= document.getElementById("c1Label").textContent;
+      if(c2===1) answer+= ";" + document.getElementById("c2Label").textContent;
+      if(c3===1) answer+= ";" + document.getElementById("c3Label").textContent;
+      if(c4===1) answer+= ";" + document.getElementById("c4Label").textContent;
+      if(c5===1) answer+= ";" + document.getElementById("c5Label").textContent;
+      if(c6===1) answer+= ";" + document.getElementById("c6Label").textContent;
+      if(c7===1) answer+= ";" + document.getElementById("c7Label").textContent;
+
     if(sum < 7) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A  Question A11", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11", "false",answer);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A  Question A11", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11", "true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
   }
 
+  function showSolution() {
+      document.getElementById("c1").checked = true;
+      document.getElementById("c2").checked = true;
+      document.getElementById("c3").checked = true;
+      document.getElementById("c4").checked = true;
+      document.getElementById("c5").checked = true;
+      document.getElementById("c6").checked = true;
+      document.getElementById("c7").checked = false;
+      recordHotspotInteraction("showSolution","Vilken information behöver personalen på operationsenheten?", "Film A  Question A7");
+  }
+
+
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_24");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A  Question A11");
-    recordSpeech("Film A  Question A7");
+    recordHotspotInteraction("showNext", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11");
     player.play();
   }
 

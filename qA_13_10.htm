@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Du framför oro (riktad till teamledaren): ”Jag är bekymrad över att patientens puls stiger” och mäter ett nytt blodtryck.</label><br />
+        <label for="c1" id="c1Label">Du framför oro (riktad till teamledaren): ”Jag är bekymrad över att patientens puls stiger” och mäter ett nytt blodtryck.</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Du antar att teamet noterat pulsstegringen och inväntar att det automatiska blodtrycket mäts.</label><br />
+        <label for="c2" id="c2Label">Du antar att teamet noterat pulsstegringen och inväntar att det automatiska blodtrycket mäts.</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -39,8 +39,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A8");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8");
+
   }
 
   function checkQuestion() {
@@ -49,12 +49,12 @@
     var c2 = document.getElementById("c2").checked ? 1 : 0;
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A Question A8", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion", "Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A Question A8", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -79,8 +79,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_10");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A8");
-    recordSpeech("Film A Question A8");
+    recordHotspotInteraction("showNext","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8");
+
     player.play();
   }
 

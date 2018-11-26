@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Erytrocytkoncentration, plasma, trombocyter, 1:1:1</label><br />
+        <label for="c1" id="c1Label">Erytrocytkoncentration, plasma, trombocyter, 1:1:1</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Erytrocytkoncentration, plasma, trombocyter, 4:4:1</label><br />
+        <label for="c2" id="c2Label">Erytrocytkoncentration, plasma, trombocyter, 4:4:1</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -37,8 +37,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A9");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9");
+
   }
 
   function checkQuestion() {
@@ -48,12 +48,12 @@
     // Evaluate
     var sum = c2 - c1;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A Question A9", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A Question A9", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_41");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A9");
-    recordSpeech("Film A Question A9");
+    recordHotspotInteraction("showNext","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9");
+
     if(correct) {
       currentVideo = "videoB";
       player.src({type: "video/mp4", src: "videoB.mp4"});
