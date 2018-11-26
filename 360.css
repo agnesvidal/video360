@@ -43,7 +43,7 @@
 }
 
 .question-subheader {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 23px;
   color: #444444;
   margin-bottom: 20px;
@@ -112,7 +112,10 @@
   color: #444444;
   text-align: center;
 }
-
+.checkboxStyle{
+  width: 30px;
+  height: 30px;
+}
 
 
 
@@ -120,7 +123,7 @@
 
 .question-typeRadio label {
   font-size: 18px;
-  line-height: 22px;
+  /*line-height: 22px;*/
   color: #444444;
 }
 
