@@ -54,11 +54,11 @@
     var sum = c1 - c2 - c3;
 
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
+      $(".question-evaluation-notice").html("Fel");
       recordHotspotInteraction("checkQuestion","Om det inte finns en fri venväg och du inte lyckas skapa en inom 90 sekunder vad gör du?", "Film A Question A3", "false",c2===1? document.getElementById("c2Label").textContent:document.getElementById("c3Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
+      $(".question-evaluation-notice").html("Rätt");
       recordHotspotInteraction("checkQuestion","Om det inte finns en fri venväg och du inte lyckas skapa en inom 90 sekunder vad gör du?", "Film A Question A3", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }

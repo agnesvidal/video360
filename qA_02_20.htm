@@ -50,11 +50,11 @@
         // Evaluate
         var sum = c1 - c2;
         if(sum < 1) {
-            $(".question-evaluation-notice").html("Wrong!");
+            $(".question-evaluation-notice").html("Fel");
             recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1", "false",document.getElementById("c2Lablel").textContent);
             correct = false;
         } else {
-            $(".question-evaluation-notice").html("Correct!");
+            $(".question-evaluation-notice").html("Rätt");
             recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1", "true",document.getElementById("c1Lablel").textContent);
             correct = true;
         }

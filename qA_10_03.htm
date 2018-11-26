@@ -48,11 +48,11 @@
     // Evaluate
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
+      $(".question-evaluation-notice").html("Fel");
       recordHotspotInteraction("checkQuestion","Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
+      $(".question-evaluation-notice").html("Rätt");
       recordHotspotInteraction("checkQuestion","Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }

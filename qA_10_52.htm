@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Ketanest + Celocurin</label><br />
+        <label for="c1" id="c1Label">Ketanest + Celocurin</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Propofol + Celocurin</label>
+        <label for="c2" id="c2Label">Propofol + Celocurin</label>
       </div>
     </div>
     <div class="question-footer">
@@ -21,7 +21,7 @@
         <div class="question-evaluation-notice"></div>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
         <!--<button type="button" id="againButton" onclick="tryAgain()">Try again</button>
-        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>-->
+        <!--<button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>&ndash;&gt;-->
         <div style="clear: both;"></div>
       </div>
     </div>
@@ -39,8 +39,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A5");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5");
+
   }
 
   function checkQuestion() {
@@ -49,12 +49,12 @@
     var c2 = document.getElementById("c2").checked ? 1 : 0;
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A Question A5", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A Question A5", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion", "Vad väljer du för anestesiläkemedel?","Film A Question A5", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
   function showSolution() {
     document.getElementById("c1").checked = true;
     document.getElementById("c2").checked = false;
-    recordInteraction("showSolution", "Film A Question A5");
+      recordHotspotInteraction("showSolution", "Film A Question A5");
   }
 
   function tryAgain() {
@@ -72,15 +72,15 @@
     correct = false;
     $("#checkButton").css("display", "inline-block");
     $(".question-evaluation").css("display", "none");
-    recordInteraction("tryAgain", "Film A Question A5");
+      recordHotspotInteraction("tryAgain", "Film A Question A5");
   }
 
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_10_52");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A5");
-    recordSpeech("Film A Question A5");
+      recordHotspotInteraction("showNext", "Vad väljer du för anestesiläkemedel?", "Film A Question A5");
+
     player.play();
   }
 

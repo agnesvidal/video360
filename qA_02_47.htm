@@ -53,11 +53,11 @@
     var c3 = document.getElementById("c3").checked ? 1 : 0;
     var sum = c1 - c2 - c3;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
+      $(".question-evaluation-notice").html("Fel");
         recordHotspotInteraction("checkQuestion", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2", "false", c2===1? document.getElementById("c2Label").textContent:document.getElementById("c3Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
+      $(".question-evaluation-notice").html("Rätt");
         recordHotspotInteraction("checkQuestion","Vilket bör målvärdet vara för Robins systoliska blodtryck?", "Film A Question A2", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
