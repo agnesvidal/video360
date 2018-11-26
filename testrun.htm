@@ -119,31 +119,58 @@
   <p class="validateTips">All form fields are required.</p>
 
   <form>
-    <fieldset>
-      <label for="scenarios">Scenario</label>
-      <select class="form-control form-control-lg" name="scenario" id="scenarios" onchange="selectScenario()" required>
-        <option value="">Choose... </option>
-      </select>
+    <table>
 
-    <br>
-      <label for="studies">Study:</label>
-      <select class="form-control form-control-lg" name="study" id="studies" onchange="selectStudy()" required>
-        <option value="">Choose... </option>
-      </select>
+      <tr>
+        <td>
+          <label for="scenarios">Scenario</label>
+        </td>
+        <td>
+          <select class="form-control form-control-lg" name="scenario" id="scenarios" onchange="selectScenario()" required>
+            <option value="">Choose... </option>
+          </select>
+        </td>
+      </tr>
 
-      <br>
-        <label for="group_name">Group Name</label>
-        <input  class="form-control form-control-lg" type="text" name="group_name" id="group_name" required>
+     <tr>
+       <td>
+         <label for="studies">Study:</label>
+       </td>
 
-      <br>
+       <td>
 
-        <label for="password">Password</label>
-        <input type="password" class="form-control form-control-lg" id="password" placeholder="Password" required>
+         <select class="form-control form-control-lg" name="study" id="studies" onchange="selectStudy()" required>
+           <option value="">Choose... </option>
+         </select>
+       </td>
+     </tr>
+
+      <tr>
+        <td>
+          <label for="group_name">Group Name:</label>
+        </td>
+        <td>
+          <input  class="form-control form-control-lg" type="text" name="group_name" id="group_name" required>
+
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label for="password">Password</label>
+        </td>
+        <td>
+          <input type="password" class="form-control form-control-lg" id="password" placeholder="Password" required>
+        </td>
+      </tr>
+
+
+
 
 
       <!-- Allow form submission with keyboard without duplicating the dialog button -->
       <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </fieldset>
+    </table>
   </form>
 </div>
 
