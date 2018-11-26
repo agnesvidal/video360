@@ -1,716 +1,718 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>EmergencyCare360</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    <script src="jquery.ui.touch-punch.min.js"></script>
-    <script src="https://vjs.zencdn.net/5.19.2/video.js"></script>
-    <link href="https://vjs.zencdn.net/5.19.2/video-js.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="pannellum/src/js/libpannellum.js"></script>
-    <script type="text/javascript" src="pannellum/src/js/pannellum.js"></script>
-    <script src="pannellum/utils/video/videojs-pannellum-plugin.js"></script>
-    <link rel="stylesheet" href="pannellum/src/css/pannellum.css"/>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
-    <link rel="stylesheet" href="360.css"/>
-    <script>
+<head>
+  <meta charset="utf-8">
+  <title>EmergencyCare360</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <script src="jquery.ui.touch-punch.min.js"></script>
+  <script src="https://vjs.zencdn.net/5.19.2/video.js"></script>
+  <link href="https://vjs.zencdn.net/5.19.2/video-js.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="pannellum/src/js/libpannellum.js"></script>
+  <script type="text/javascript" src="pannellum/src/js/pannellum.js"></script>
+  <script src="pannellum/utils/video/videojs-pannellum-plugin.js"></script>
+  <link rel="stylesheet" href="pannellum/src/css/pannellum.css"/>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+  <link rel="stylesheet" href="360.css"/>
+  <script>
+      var SERVER_URL = "http://ansion.lnu.se/360Video";
 
 
-      if (!('webkitSpeechRecognition' in window)) {
-          //Speech API not supported here…
-      } else { //Let’s do some cool stuff :)
-          var recognition = new webkitSpeechRecognition(); //That is the object that will manage our whole recognition process.
-          recognition.continuous = true;   //Suitable for dictation.
-          recognition.interimResults = false;  //If we want to start receiving results even if they are not final.
-          //Define some more additional parameters for the recognition:
-          recognition.lang = "sv-SV";
-          recognition.maxAlternatives = 1; //Since from our experience, the highest result is really the best...
-      }
-
-      var final_transcript = "";
-      recognition.onresult = function(event) {
-        var interim_transcript = "";
-        for (var i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            final_transcript += event.results[i][0].transcript;
-          } else {
-            interim_transcript += event.results[i][0].transcript;
-          }
-        }
-      };
-
-      recognition.onend = function() {
-        if (isRecording) {
-          recognition.start();
-        }
-      };
-
-      function toggleRecording(bool) {
-        isRecording = bool;
-        if (bool) {
-          recognition.start();
-        } else {
-          //console.log(final_transcript);
-          recognition.stop();
-        }
-      }
-    </script>
-  </head>
-  <body>
-
-    <!-- Login -->
-    <div id="login-dialog" title="Login">
-      <p class="validateTips">All form fields are required.</p>
-
-      <form>
-        <fieldset>
-          <label for="group_name">Group Name:</label>
-          <input type="text" name="group_name" id="group_name" class="text ui-widget-content ui-corner-all">
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all">
-          <!-- Allow form submission with keyboard without duplicating the dialog button -->
-          <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-        </fieldset>
-      </form>
-    </div>
-
-    <!-- Video.js object -->
-    <video id="panorama" class="video-js vjs-default-skin vjs-big-play-centered"
-      controls preload="none" style="width:960px; height:480px;" data-setup='{ "inactivityTimeout": 0 }'
-      poster="" crossorigin="anonymous">
-        <source src="videoA.mp4" type="video/mp4"/>
-        <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to
-            a web browser that <a href="http://videojs.com/html5-video-support/"
-            target="_blank">supports HTML5 video</a>
-        </p>
-    </video>
-    <button name="upload" onClick="upload()">Upload</button>
-
-    <script>
-      // LOGIN
-      var group;
-      $( function() {
-        // login
-        var dialog = $( "#login-dialog" ).dialog({
-          autoOpen: false,
-          height: 300,
-          width: 350,
-          modal: true,
-          hideCloseButton: true,
-          buttons: {
-            "Login": login
-          }
-        });
-
-        function login() {
-          //check if group name not empty
-            //url: "http://celtest1.lnu.se:3003/login",
-          var group_name = $( "#group_name" ).val();
-          var password = $( "#password" ).val();
+      setupScenarioList();
 
 
+      function setupScenarioList(){
 
-          if(group_name.length > 0 && password === "LNU"){
-            $.ajax({
-                url: "http://celtest1.lnu.se:3003/login",
-                type: "post",
-                data: {group_name: group_name},
-                success: function(message) {
-                  group = message.group;
-                  localStorage.setItem("groupId",message.group);
-                  dialog.dialog("close");
+          $.ajax({
+              url: SERVER_URL+"/scenarios/all",
+              type: "post",
+              success: function(result) {
+                  //console.log(result);
+                  var scenarios= result.result;
+                  var scenarioList = document.getElementById("scenarios");
+                  for (var i = 0; i < scenarios.length; i++) {
+                      var scenario = new Option(scenarios[i].name, scenarios[i]._id);
+                      scenarioList.options.add(scenario);
+                  }
+
               },
               error: function(message) {
-                console.log(message);
+                  console.log(message);
               }
-            });
-          }
-          else{
-            alert("Please enter the group name and correct password");
-          }
-
-          return false;
-        }
-
-        dialog.dialog("open");
-      });
-
-      // Database
-      var cameraMovements = [];
-      var videoInteractions = [];
-      var speechRecordings = [];
-
-      // Flags
-      var isRecording = false;
-      var currentVideo = "videoA";
-      var qA_03_09 = false;
-      var qA_12_08 = false;
-      var qA_10_52 = false;
-      var qA_09_41 = false;
-      var qA_02_47 = false;
-      var qA_13_10 = false;
-      var qA_13_24 = false;
-      var qA_13_41 = false;
-      var qA_10_03 = false;
-      var qA_11_31 = false;
-      var qA_16_19 = false;
-      var qA_02_20 = false;
-      var qB_05_39 = false;
-      var qA_13_53 = false;
-      var qA_14_10 = false;
-      var qB_07_09 = false;
-      var qB_05_10 = false;
-      var qB_07_25 = false;
-      var qB_05_39 = false;
-      var gameover = false;
-
-      var goBackTime = 0;
-
-      // Control element references
-      var playButton;
-
-      // Video.js setup
-      var player = videojs('panorama', {
-        loop: false,
-        plugins: {
-          // Load Pannellum Plugin
-          pannellum: {
-            // Enable video controls via device orientation
-            "orientationOnByDefault": true
-          }
-        }
-      // Executed after player started
-      }).ready(function(){
-        // Reference elements that needed setup
-        playButton = document.getElementsByClassName("vjs-play-control vjs-control vjs-button")[0];
-
-
-        player.pnlmViewer.on('useractive',function () {
-            console.log("User active");
-
-
-
-        });
-
-
-
-          player.pnlmViewer.on('mousedown', function(event) {
-
-              console.log("mouse movement detected");
-
-
-
-              // Save statistic data
-              var cameraMovements = {
-                  "id" : localStorage.getItem("groupId"),
-                  // getDeviceOrientationStatus() is a custom function in pannellum.js!
-                  "deviceOrientation" : player.pnlmViewer.getDeviceOrientationStatus(),
-                  "pitch" : player.pnlmViewer.getPitch(),
-                  "yaw" : player.pnlmViewer.getYaw(),
-                  "mouseLocationCords":player.pnlmViewer.mouseEventToCoords(event),
-                  "timeline" : player.currentTime(),
-                  "timestamp" : Date.now()
-              };
-
-              upload(cameraMovements,null,null);
-
           });
 
 
+      }
+
+      function setupStudyList(scenarioId){
+          $.ajax({
+              url: SERVER_URL+"/studies/get",
+              type: "post",
+              data:{scenarioId:scenarioId},
+              success: function(result) {
+                  console.log(result);
+                  var studies = result.result;
+                  var studyList = document.getElementById("studies");
+                  for (var i = 0; i < studies.length; i++) {
+                      var study = new Option(studies[i].name, studies[i]._id);
+                      studyList.options.add(study);
+                  }
+
+              },
+              error: function(message) {
+                  console.log(message);
+              }
+          });
+      }
 
 
-          var oldPitch = 0;
-          var oldYaw =0;
+      function selectScenario(){
+
+          var scenarioId = $( "#scenarios" ).val();
+          localStorage.setItem("scenarioId",scenarioId);
+          setupStudyList(scenarioId);
+      }
+
+      function selectStudy() {
+          var studyId = $( "#studies" ).val();
+          localStorage.setItem("studyId",studyId);
+      }
+
+
+
+
+//      $("loginForm").submit(function(e){
+//          e.preventDefault();
+//
+//
+//          return false;
+//      });
+
+
+      function sendCameraData(cameraData){
+          $.ajax({
+              url: SERVER_URL + "/data/camera-movements",
+              type: "post",
+              data:cameraData,
+              success: function(result) {
+//                  console.log(result);
+
+              },
+              error: function(message) {
+                  console.log(message);
+              }
+          });
+      }
+
+
+
+  </script>
+</head>
+<body>
+
+<!-- Login DIALOG-->
+
+
+
+<!-- Login -->
+<div id="login-dialog" title="Login">
+  <p class="validateTips">All form fields are required.</p>
+
+  <form>
+    <fieldset>
+      <label for="scenarios">Scenario</label>
+      <select class="form-control form-control-lg" name="scenario" id="scenarios" onchange="selectScenario()" required>
+        <option value="">Choose... </option>
+      </select>
+
+      <label for="studies">Study:</label>
+      <select class="form-control form-control-lg" name="study" id="studies" onchange="selectStudy()" required>
+        <option value="">Choose... </option>
+      </select>
+
+
+        <label for="group_name">Group Name</label>
+        <input  class="form-control form-control-lg" type="text" name="group_name" id="group_name" required>
+
+
+
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" required>
+
+
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+
+
+<video id="panorama" class="video-js vjs-default-skin vjs-big-play-centered"
+       controls preload="none" style="width:960px; height:480px;" data-setup='{ "inactivityTimeout": 0 }'
+       poster="" crossorigin="anonymous">
+  <source src="videoA.mp4" type="video/mp4"/>
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to
+    a web browser that <a href="http://videojs.com/html5-video-support/"
+                          target="_blank">supports HTML5 video</a>
+  </p>
+</video>
+
+
+
+
+<script>
+    // LOGIN
+    var group;
+    $( function() {
+
+
+        var dialog = $( "#login-dialog" ).dialog({
+            autoOpen: false,
+            height: 400,
+            width: 350,
+            modal: true,
+            hideCloseButton: true,
+            buttons: {
+                "Login": login
+            }
+        });
+
+        function login() {
+
+            var password = document.getElementById("password");
+            if(password.value==="LNU"){
+                var groupName = $( "#group_name" ).val();
+                localStorage.setItem("group",groupName);
+                dialog.dialog("close");
+
+            }
+            else {
+                $('#errorMessage').text("Password is incorrect");
+                $('#errorMessage').css('display', '')
+            }
+
+            return false;
+        }
+
+        dialog.dialog("open");
+
+
+    });
+
+
+
+    // Flags
+    var currentVideo = "videoA";
+    var qA_03_09 = false;
+    var qA_12_08 = false;
+    var qA_10_52 = false;
+    var qA_09_41 = false;
+    var qA_02_47 = false;
+    var qA_13_10 = false;
+    var qA_13_24 = false;
+    var qA_13_41 = false;
+    var qA_10_03 = false;
+    var qA_11_31 = false;
+    var qA_16_19 = false;
+    var qA_02_20 = false;
+    var qB_05_39 = false;
+    var qA_13_53 = false;
+    var qA_14_10 = false;
+    var qB_07_09 = false;
+    var qB_05_10 = false;
+    var qB_07_25 = false;
+    var qB_05_39 = false;
+    var gameover = false;
+
+    var goBackTime = 0;
+
+    // Control element references
+    var playButton;
+
+    // Video.js setup
+    var player = videojs('panorama', {
+        loop: false,
+        plugins: {
+            // Load Pannellum Plugin
+            pannellum: {
+                // Enable video controls via device orientation
+                "orientationOnByDefault": true
+            }
+        }
+        // Executed after player started
+    }).ready(function(){
+        // Reference elements that needed setup
+        playButton = document.getElementsByClassName("vjs-play-control vjs-control vjs-button")[0];
+
+        //COLLECT CAMERA MOVEMENTS DATA
+        player.pnlmViewer.on('mousedown', function(event) {
+            console.log("here");
+            // For pitch and yaw of center of viewer
+            //console.log(player.pnlmViewer.getPitch(), player.pnlmViewer.getYaw());
+            // For pitch and yaw of mouse location
+            //console.log(player.pnlmViewer.mouseEventToCoords(event));
+            var cameraData = {scenarioId:localStorage.getItem("scenarioId"),
+                studyId:localStorage.getItem("studyId"),
+                groupName:localStorage.getItem("group"),
+                pitch:player.pnlmViewer.getPitch(),
+                yaw:player.pnlmViewer.getYaw(),
+                mouseCords:{x:player.pnlmViewer.mouseEventToCoords(event)[0],y:player.pnlmViewer.mouseEventToCoords(event)[1]},
+                timeline:player.currentTime()};
+            //console.log(cameraData);
+            sendCameraData(cameraData);
+
+        });
+
+
         // Listen to timeupdates
         player.on('timeupdate', function() {
 
+            // Question A1 on videoA at 2:18
+            if(this.currentTime() > 5.0 && this.currentTime() < 6.0
+                && !qA_02_20
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_02_20 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_02_20-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_02_20",           // Function argument(s)
+                    "id": "qA_02_20"                           // Hotspot id
+                });
+            }
 
-          if(oldPitch!=player.pnlmViewer.getPitch() || oldYaw!=player.pnlmViewer.getYaw()){
-              console.log("changed pitch or yaw is detected");
-              oldPitch = player.pnlmViewer.getPitch();
-              oldYaw = player.pnlmViewer.getYaw();
+            // Queston A2 on videoA at 2:41
+            if(this.currentTime() > 161.0 && this.currentTime() < 162.0
+                && !qA_02_47
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_02_47 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_02_47-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_02_47",           // Function argument(s)
+                    "id": "qA_02_47"                           // Hotspot id
+                });
+            }
 
-              // Save statistic data
-              var cameraMovements = {
-                  "id" : localStorage.getItem("groupId"),
-                  // getDeviceOrientationStatus() is a custom function in pannellum.js!
-                  "deviceOrientation" : player.pnlmViewer.getDeviceOrientationStatus(),
-                  "pitch" : player.pnlmViewer.getPitch(),
-                  "yaw" : player.pnlmViewer.getYaw(),
-                  "mouseLocationCords":[0,0],
-                  "timeline" : player.currentTime(),
-                  "timestamp" : Date.now()
-              };
+            // Queston A2 on videoA at 3:09
+            if(this.currentTime() > 189.0 && this.currentTime() < 190.0
+                && !qA_03_09
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_03_09 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_03_09-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_03_09",           // Function argument(s)
+                    "id": "qA_03_09"                           // Hotspot id
+                });
+            }
 
-              upload(cameraMovements,null,null);
-          }
+            // Create Hotspot on videoA at -9:27
+            if(this.currentTime() > 526.0 && this.currentTime() < 527.0
+                && !qA_09_41
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_09_41 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_09_41-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_09_41",           // Function argument(s)
+                    "id": "qA_09_41"                           // Hotspot id
+                });
+            }
 
-          // Question A1 on videoA at 2:18
-          if(this.currentTime() > 138.0 && this.currentTime() < 139.0
-             && !qA_02_20
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_02_20 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_02_20-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_02_20",           // Function argument(s)
-              "id": "qA_02_20"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA at -8:56
+            if(this.currentTime() > 557.0 && this.currentTime() < 557.5
+                && !qA_10_03
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_10_03 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_10_03-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_10_03",           // Function argument(s)
+                    "id": "qA_10_03"                           // Hotspot id
+                });
+            }
 
-          // Queston A2 on videoA at 2:41
-          if(this.currentTime() > 161.0 && this.currentTime() < 162.0
-             && !qA_02_47
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_02_47 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_02_47-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_02_47",           // Function argument(s)
-              "id": "qA_02_47"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA at 10:08
+            if(this.currentTime() > 608.0 && this.currentTime() < 608.5
+                && !qA_10_52
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_10_52 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_10_52-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_10_52",           // Function argument(s)
+                    "id": "qA_10_52"                           // Hotspot id
+                });
+            }
 
-          // Queston A2 on videoA at 3:09
-          if(this.currentTime() > 189.0 && this.currentTime() < 190.0
-             && !qA_03_09
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_03_09 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_03_09-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_03_09",           // Function argument(s)
-              "id": "qA_03_09"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA at -6:41
+            if(this.currentTime() > 651.0 && this.currentTime() < 651.5
+                && !qA_11_31
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_11_31 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_11_31-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_11_31",           // Function argument(s)
+                    "id": "qA_11_31"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA at -9:27
-          if(this.currentTime() > 526.0 && this.currentTime() < 527.0
-             && !qA_09_41
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_09_41 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_09_41-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_09_41",           // Function argument(s)
-              "id": "qA_09_41"                           // Hotspot id
-            });
-          }
+            // Question A7 on videoA at -6:41
+            if(this.currentTime() > 692.0 && this.currentTime() < 693.0
+                && !qA_12_08
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_12_08 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_12_08-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_12_08",           // Function argument(s)
+                    "id": "qA_12_08"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA at -8:56
-          if(this.currentTime() > 557.0 && this.currentTime() < 557.5
-             && !qA_10_03
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_10_03 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_10_03-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_10_03",           // Function argument(s)
-              "id": "qA_10_03"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA at -5:49
+            if(this.currentTime() > 744.0 && this.currentTime() < 745.0
+                && !qA_13_10
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_13_10 = true;
+                // Pause video (delay to fix position error)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_13_10-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_13_10",           // Function argument(s)
+                    "id": "qA_13_10"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA at 10:08
-          if(this.currentTime() > 608.0 && this.currentTime() < 608.5
-             && !qA_10_52
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_10_52 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_10_52-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_10_52",           // Function argument(s)
-              "id": "qA_10_52"                           // Hotspot id
-            });
-          }
+            // Question A9 on videoA at 12:52
+            if(this.currentTime() > 772.0 && this.currentTime() < 773.0
+                && !qA_13_41
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_13_41 = true;
+                goBackTime = 768;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_13_41-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_13_41",           // Function argument(s)
+                    "id": "qA_13_41"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA at -6:41
-          if(this.currentTime() > 651.0 && this.currentTime() < 651.5
-             && !qA_11_31
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_11_31 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_11_31-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_11_31",           // Function argument(s)
-              "id": "qA_11_31"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA after 15:33
+            if(this.currentTime() > 933.0 && this.currentTime() < 934.0
+                && !qA_16_19
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_16_19 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_16_19-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_16_19",           // Function argument(s)
+                    "id": "qA_16_19"                           // Hotspot id
+                });
+            }
 
-          // Question A7 on videoA at -6:41
-          if(this.currentTime() > 692.0 && this.currentTime() < 693.0
-             && !qA_12_08
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_12_08 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_12_08-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_12_08",           // Function argument(s)
-              "id": "qA_12_08"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA after 13:02
+            if(this.currentTime() > 782.0 && this.currentTime() < 783.0
+                && !qA_13_53
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_13_53 = true;
+                goBackTime = 778;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_13_53-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_13_53",           // Function argument(s)
+                    "id": "qA_13_53"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA at -5:49
-          if(this.currentTime() > 744.0 && this.currentTime() < 745.0
-             && !qA_13_10
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_13_10 = true;
-            // Pause video (delay to fix position error)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_13_10-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_13_10",           // Function argument(s)
-              "id": "qA_13_10"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoA after 13:24
+            if(this.currentTime() > 804.0 && this.currentTime() < 805.0
+                && !qA_13_24
+                && currentVideo == "videoA") {
+                // Disable Hotspot creation for the future
+                qA_13_24 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qA_13_24-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qA_13_24",           // Function argument(s)
+                    "id": "qA_13_24"                           // Hotspot id
+                });
+            }
 
-          // Question A9 on videoA at 12:52
-          if(this.currentTime() > 772.0 && this.currentTime() < 773.0
-             && !qA_13_41
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_13_41 = true;
-            goBackTime = 768;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_13_41-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_13_41",           // Function argument(s)
-              "id": "qA_13_41"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoB after 05:39
+            if(this.currentTime() > 339.0 && this.currentTime() < 340.0
+                && !qB_05_39
+                && currentVideo == "videoB") {
+                // Disable Hotspot creation for the future
+                qB_05_39 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qB_05_39-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qB_05_39",           // Function argument(s)
+                    "id": "qB_05_39"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA after 15:33
-          if(this.currentTime() > 933.0 && this.currentTime() < 934.0
-             && !qA_16_19
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_16_19 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_16_19-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_16_19",           // Function argument(s)
-              "id": "qA_16_19"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoB after 06:35
+            if(this.currentTime() > 395.0 && this.currentTime() < 396.0
+                && !qB_07_09
+                && currentVideo == "videoB") {
+                // Disable Hotspot creation for the future
+                qB_07_09 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qB_07_09-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qB_07_09",           // Function argument(s)
+                    "id": "qB_07_09"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA after 13:02
-          if(this.currentTime() > 782.0 && this.currentTime() < 783.0
-             && !qA_13_53
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_13_53 = true;
-            goBackTime = 778;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_13_53-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_13_53",           // Function argument(s)
-              "id": "qA_13_53"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoB after 05:10 (310 seconds)
+            if(this.currentTime() > 310.0 && this.currentTime() < 311.0
+                && !qB_05_10
+                && currentVideo == "videoB") {
+                // Disable Hotspot creation for the future
+                qB_05_10 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qB_05_10-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qB_05_10",           // Function argument(s)
+                    "id": "qB_05_10"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoA after 13:24
-          if(this.currentTime() > 804.0 && this.currentTime() < 805.0
-             && !qA_13_24
-             && currentVideo == "videoA") {
-            // Disable Hotspot creation for the future
-            qA_13_24 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qA_13_24-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qA_13_24",           // Function argument(s)
-              "id": "qA_13_24"                           // Hotspot id
-            });
-          }
+            // Create Hotspot on videoB after 07:25 (445 seconds)
+            if(this.currentTime() > 445.0 && this.currentTime() < 446.0
+                && !qB_07_25
+                && currentVideo == "videoB") {
+                // Disable Hotspot creation for the future
+                qB_07_25 = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "qB_07_25-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "qB_07_25",           // Function argument(s)
+                    "id": "qB_07_25"                           // Hotspot id
+                });
+            }
 
-          // Create Hotspot on videoB after 05:39
-          if(this.currentTime() > 339.0 && this.currentTime() < 340.0
-             && !qB_05_39
-             && currentVideo == "videoB") {
-            // Disable Hotspot creation for the future
-            qB_05_39 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qB_05_39-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qB_05_39",           // Function argument(s)
-              "id": "qB_05_39"                           // Hotspot id
-            });
-          }
-
-          // Create Hotspot on videoB after 06:35
-          if(this.currentTime() > 395.0 && this.currentTime() < 396.0
-             && !qB_07_09
-             && currentVideo == "videoB") {
-            // Disable Hotspot creation for the future
-            qB_07_09 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qB_07_09-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qB_07_09",           // Function argument(s)
-              "id": "qB_07_09"                           // Hotspot id
-            });
-          }
-
-          // Create Hotspot on videoB after 05:10 (310 seconds)
-          if(this.currentTime() > 310.0 && this.currentTime() < 311.0
-             && !qB_05_10
-             && currentVideo == "videoB") {
-            // Disable Hotspot creation for the future
-            qB_05_10 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qB_05_10-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qB_05_10",           // Function argument(s)
-              "id": "qB_05_10"                           // Hotspot id
-            });
-          }
-
-          // Create Hotspot on videoB after 07:25 (445 seconds)
-          if(this.currentTime() > 445.0 && this.currentTime() < 446.0
-             && !qB_07_25
-             && currentVideo == "videoB") {
-            // Disable Hotspot creation for the future
-            qB_07_25 = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "qB_07_25-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "qB_07_25",           // Function argument(s)
-              "id": "qB_07_25"                           // Hotspot id
-            });
-          }
-
-          // Create Hotspot for Game Over
-          if(this.currentTime() > 2.0 && this.currentTime() < 3.0
-            && !gameover
-            && currentVideo == "videoC") {
-            // Disable Hotspot creation for the future
-            gameover = true;
-            // Pause video (delay to fix position error -- yes, it is stupid)
-            setTimeout(function() { player.pause(); }, 100);
-            // Disable play button for the group
-            playButton.style.display = "none";
-            // Add Hotspot to Pannellum Plugin
-            player.pnlmViewer.addHotSpot ({
-              "pitch": player.pnlmViewer.getPitch(),     // Position Y
-              "yaw": player.pnlmViewer.getYaw(),         // Position Z
-              "cssClass": "gameover-hotspot",            // CSS Class
-              "createTooltipFunc": loadHotspot,          // Function to be executed
-              "type": "info",                            // Hotspot type
-              "createTooltipArgs": "gameover",           // Function argument(s)
-              "id": "gameover"                           // Hotspot id
-            });
-          }
+            // Create Hotspot for Game Over
+            if(this.currentTime() > 2.0 && this.currentTime() < 3.0
+                && !gameover
+                && currentVideo == "videoC") {
+                // Disable Hotspot creation for the future
+                gameover = true;
+                // Pause video (delay to fix position error -- yes, it is stupid)
+                setTimeout(function() { player.pause(); }, 100);
+                // Disable play button for the group
+                playButton.style.display = "none";
+                // Add Hotspot to Pannellum Plugin
+                player.pnlmViewer.addHotSpot ({
+                    "pitch": player.pnlmViewer.getPitch(),     // Position Y
+                    "yaw": player.pnlmViewer.getYaw(),         // Position Z
+                    "cssClass": "gameover-hotspot",            // CSS Class
+                    "createTooltipFunc": loadHotspot,          // Function to be executed
+                    "type": "info",                            // Hotspot type
+                    "createTooltipArgs": "gameover",           // Function argument(s)
+                    "id": "gameover"                           // Hotspot id
+                });
+            }
 
         });
 
-      });
+    });
 
-      // Load HotSpot HTML and Scripts from external file
-      function loadHotspot(hotSpotDiv, args) {
-        $(".hotspot-wrapper").remove();
+    // Load HotSpot HTML and Scripts from external file
+    function loadHotspot(hotSpotDiv, args) {
+        //$(".hotspot-wrapper").remove();
         $("." + args + "-hotspot").load(args + ".htm");
-      }
+        console.log($("." + args + "-hotspot").load(args + ".htm"));
+    }
 
-      // Save interaction data in array
-      function recordInteraction(action, questionID, evaluation) {
+    // Save interaction data in array
+    function recordHotspotInteraction(action, questionName,questionId, evaluation,answer) {
         var action = action || "none";
-        var questionID = questionID || "none";
+        var questionId = questionId || "none";
         var evaluation = evaluation || "none";
-        // Send statistic data to server
-        var videoInteractions = {
-          "id" : group,
-          "action" : action,
-          "questionId" : questionID,
-          "evaluation" : evaluation,
-          "timeline" : player.currentTime(),
-          "timestamp" : Date.now()
-        };
-       upload(null,videoInteractions,null)
-      }
+        var answer = answer || "none";
 
-      // Save speech to text gibberish
-      function recordSpeech(questionID) {
-        toggleRecording(false);
+        var hotspotData = {
+            scenarioId:localStorage.getItem("scenarioId"),
+            studyId:localStorage.getItem("studyId"),
+            groupName:localStorage.getItem("group"),
+            questionId:questionId,
+            questionName:questionName,
+            action:action,
+            evaluation:{correct:evaluation,answer:answer},
+            timeline:player.currentTime()};
 
-        var speechRecordings = {
-          "id" : group,
-          "questionId" : questionID,
-          "transcript" : final_transcript,
-          "timeline" : player.currentTime(),
-          "timestamp" : Date.now()
-        };
-        upload(null,null,speechRecordings);
-        final_transcript = "";
-      }
-
-      // Send to database
-      function upload(cameraMovements,videoInteractions,speechRecordings) {
-        var uploadData = {
-          "groupId" : localStorage.getItem("groupId"),
-          "cameraData" : JSON.stringify(cameraMovements),
-          "interactionData" : JSON.stringify(videoInteractions),
-          "speechData" : JSON.stringify(speechRecordings),
-          "video" : "Demo"
-        };
-        console.log(JSON.stringify(uploadData));
         $.ajax({
-          url: "http://celtest1.lnu.se:3003/savedata",
-          type: "post",
-          data: uploadData,
-          success: function(message) {
-            //console.log(message);
-          },
-          error: function(message) {
-            console.log(message);
-          }
+            url: SERVER_URL + "/data/hotspots-interactions",
+            type: "post",
+            data:hotspotData,
+            success: function(result) {
+//                  console.log(result);
+
+            },
+            error: function(message) {
+                console.log(message);
+            }
         });
-      }
 
-    </script>
 
-  </body>
+    }
+
+
+
+</script>
+
+</body>
 </html>
