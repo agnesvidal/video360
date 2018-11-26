@@ -47,12 +47,12 @@
 
   function checkQuestion() {
     $("#checkButton").css("display", "none");
-    console.log(document.getElementById("c1").checked);
+
     var c1 = document.getElementById("c1").checked ? 1 : 0;
     var c2 = document.getElementById("c2").checked ? 1 : 0;
     var c3 = document.getElementById("c3").checked ? 1 : 0;
     var sum = c1 - c2 - c3;
-    console.log(sum);
+
     if(sum < 1) {
       $(".question-evaluation-notice").html("Wrong!");
       recordHotspotInteraction("checkQuestion","Om det inte finns en fri venväg och du inte lyckas skapa en inom 90 sekunder vad gör du?", "Film A Question A3", "false",c2===1? document.getElementById("c2Label").textContent:document.getElementById("c3Label").textContent);
