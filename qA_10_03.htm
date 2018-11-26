@@ -10,15 +10,15 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Ge blodgrupp 0RH-</label><br />
+        <label for="c1" id="c1Label">Ge blodgrupp 0RH-</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Ger infusion med isoton kristalloid i väntan på provsvar.</label><br />
+        <label for="c2" id="c2Label">Ger infusion med isoton kristalloid i väntan på provsvar.</label><br />
       </div>
     </div>
     <div class="question-footer">
       <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
       <div class="question-evaluation">
-        <div class="question-evaluation-notice"></div>
+        <div class="questi   on-evaluation-notice"></div>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
         <div style="clear: both;"></div>
       </div>
@@ -37,8 +37,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film A Question A4");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4");
+
   }
 
   function checkQuestion() {
@@ -49,11 +49,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film A Question A4", "wrong");
+      recordHotspotInteraction("checkQuestion","Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4", "false",document.getElementById("c2Lablel").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film A Question A4", "correct");
+      recordHotspotInteraction("checkQuestion","Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4", "true",document.getElementById("c1Lablel").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_10_03");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film A Question A4");
-    recordSpeech("Film A Question A4");
+    recordHotspotInteraction("showNext","  Vad gör du om blodtransfusion behöver ges innan blodgruppering och bastest är färdigt?", "Film A Question A4");
+
     player.play();
   }
 
