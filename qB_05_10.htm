@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c2">
-        <label for="c2">Tranexamsyra är syrebärande och ökar vävnadernas syreupptag.</label><br />
+        <label for="c2" id="c2Label">Tranexamsyra är syrebärande och ökar vävnadernas syreupptag.</label><br />
         <input type="checkbox" id="c1">
-        <label for="c1">Tranexamsyra är en fibrinolyshämmare som minskar blödning genom stabilisering av koagler.</label><br />
+        <label for="c1" id="c1Label">Tranexamsyra är en fibrinolyshämmare som minskar blödning genom stabilisering av koagler.</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -37,7 +37,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film B Question B1");
+    recordHotspotInteraction("showQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1");
     toggleRecording(true);
   }
 
@@ -48,12 +48,12 @@
     // Evaluate
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film B Question B1", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film B Question B1", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_05_10");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film B Question B1");
-    recordSpeech("Film B Question B1");
+    recordHotspotInteraction("showNext", "Varför ges injektion Cyklokapron (Tranexamsyra).","Film B Question B1");
+
     if(!correct) {
       currentVideo = "videoA";
       player.src({type: "video/mp4", src: "videoA.mp4"});

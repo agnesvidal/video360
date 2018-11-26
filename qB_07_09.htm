@@ -10,21 +10,22 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Adekvata läkemedel</label><br />
+        <label for="c1" id="c1Label">Adekvata läkemedel</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Transportabel sug</label><br />
+        <label for="c2" id="c2Label">Transportabel sug</label><br />
         <input type="checkbox" id="c5">
-        <label for="c5">Intuberingsutrustning</label><br />
+        <label for="c5" id="c5Label">Intuberingsutrustning</label><br />
         <input type="checkbox" id="c3">
-        <label for="c3">Transportabel övervakningsutrustning</label><br />
+        <label for="c3" id="c3Label">Transportabel övervakningsutrustning</label><br />
         <input type="checkbox" id="c4">
-        <label for="c4">Transportabel ventilator</label><br />
+        <label for="c4" id="c4Label">Transportabel ventilator</label><br />
       </div>
     </div>
     <div class="question-footer">
       <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
       <div class="question-evaluation">
         <div class="question-evaluation-notice"></div>
+        <button type="button" id="solutionButton" onclick="showSolution()">Show solution</button>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
         <div style="clear: both;"></div>
       </div>
@@ -43,8 +44,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film B Question B3");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3");
+
   }
 
   function checkQuestion() {
@@ -54,26 +55,47 @@
     var c3 = document.getElementById("c3").checked ? 1 : 0;
     var c4 = document.getElementById("c4").checked ? 1 : 0;
     var c5 = document.getElementById("c5").checked ? 1 : 0;
-    // Evaluate
+
+
+      var answer='';
+      if(c1===1) answer+= document.getElementById("c1Label").textContent;
+      if(c2===1) answer+= ";" + document.getElementById("c2Label").textContent;
+      if(c3===1) answer+= ";" + document.getElementById("c3Label").textContent;
+      if(c4===1) answer+= ";" + document.getElementById("c4Label").textContent;
+      if(c5===1) answer+= ";" + document.getElementById("c5Label").textContent;
+
+
+
+      // Evaluate
     var sum = c1 + c2 + c3 + c4 - c5;
     if(sum < 4) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film B Question B3", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film B Question B3", "false",answer);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film B Question B3", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3", "true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
+  }
+
+
+  function showSolution() {
+      document.getElementById("c1").checked = true;
+      document.getElementById("c2").checked = true;
+      document.getElementById("c3").checked = true;
+      document.getElementById("c4").checked = true;
+      document.getElementById("c5").checked = false;
+      recordHotspotInteraction("showSolution","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film A  Question A7");
   }
 
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_07_09");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film B Question B3");
-    recordSpeech("Film B Question B3");
+    recordHotspotInteraction("showNext",  "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3");
+
     player.play();
   }
 

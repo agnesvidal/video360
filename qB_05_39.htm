@@ -5,14 +5,14 @@
   <div class="question-wrapper">
     <div class="question-header">Fråga</div>
     <div class="question-subheader">
-      8 Hur planerar du fortsatt vård/undersökning och varför?
+      Hur planerar du fortsatt vård/undersökning och varför?
     </div>
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Till röntgen, Robins status är stabilt.</label><br />
+        <label for="c1" id="c1Label">Till röntgen, Robins status är stabilt.</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Till operation, Robins status är instabilt.</label><br />
+        <label for="c2" id="c2Label">Till operation, Robins status är instabilt.</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -37,8 +37,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film B Question B2");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion","Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2");
+
   }
 
   function checkQuestion() {
@@ -48,12 +48,12 @@
     // Evaluate
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film B Question B2", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film B Question B2", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_05_39");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film B Question B2");
-    recordSpeech("Film B Question B2");
+    recordHotspotInteraction("showNext","Hur planerar du fortsatt vård/undersökning och varför?",  "Film B Question B2");
+
     player.play();
   }
 

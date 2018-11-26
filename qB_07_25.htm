@@ -10,9 +10,9 @@
     <div class="question-content question-typeRadio">
       <div class="question-unit">
         <input type="checkbox" id="c1">
-        <label for="c1">Kalcium är en viktig del i koagulationskaskaden, medverkar i bildning och stabilisering av fibrin.</label><br />
+        <label for="c1" id="c1Label">Kalcium är en viktig del i koagulationskaskaden, medverkar i bildning och stabilisering av fibrin.</label><br />
         <input type="checkbox" id="c2">
-        <label for="c2">Kalcium ökar tillväxt av skelett och benmärg som producerar syrebärande röda blodkroppar.</label><br />
+        <label for="c2" id="c2Label">Kalcium ökar tillväxt av skelett och benmärg som producerar syrebärande röda blodkroppar.</label><br />
       </div>
     </div>
     <div class="question-footer">
@@ -37,8 +37,8 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordInteraction("showQuestion", "Film B Question B4");
-    toggleRecording(true);
+    recordHotspotInteraction("showQuestion", "Varför är det viktigt att sträva efter normala nivåer av fritt kalcium i blodet?","Film B Question B4");
+
   }
 
   function checkQuestion() {
@@ -48,12 +48,12 @@
     // Evaluate
     var sum = c1 - c2;
     if(sum < 1) {
-      $(".question-evaluation-notice").html("Wrong!");
-      recordInteraction("checkQuestion", "Film B Question B4", "wrong");
+      $(".question-evaluation-notice").html("Fel");
+      recordHotspotInteraction("checkQuestion", "Varför är det viktigt att sträva efter normala nivåer av fritt kalcium i blodet?","Film B Question B4", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
-      $(".question-evaluation-notice").html("Correct!");
-      recordInteraction("checkQuestion", "Film B Question B4", "correct");
+      $(".question-evaluation-notice").html("Rätt");
+      recordHotspotInteraction("checkQuestion", "Varför är det viktigt att sträva efter normala nivåer av fritt kalcium i blodet?","Film B Question B4", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,8 +63,8 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_07_25");
     playButton.style.display = "block";
-    recordInteraction("showNext", "Film B Question B4");
-    recordSpeech("Film B Question B4");
+    recordHotspotInteraction("showNext","Varför är det viktigt att sträva efter normala nivåer av fritt kalcium i blodet?", "Film B Question B4");
+
     player.play();
   }
 
