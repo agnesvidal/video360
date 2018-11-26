@@ -69,13 +69,13 @@
 .question-typeInput .question-content input {
   display: block;
   box-sizing: border-box;
-  font-size: 12px;
-  line-height: 12px;
+  font-size: 18px;
+  /*line-height: 12px;*/
   color: #444444;
   border: 1px solid #222222;
   background-color: #fcfcfc;
   padding: 3px 6px;
-  width: 150px;
+  width: 300px;
   border-radius: 3px;
 }
 
@@ -119,7 +119,7 @@
 
 
 .question-typeRadio label {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #444444;
 }
@@ -140,7 +140,7 @@
   border: 0 !important;
   background-color: #333333 !important;
   color: #fcfcfc !important;
-  font-size: 13px !important;
+  font-size: 18px !important;
   line-height: 13px !important;
   padding: 6px 8px !important;
   border-radius: 2px !important;
@@ -155,6 +155,7 @@
   float: left;
   line-height: 15px;
   font-size: 15px;
+  font-weight: bold;
   color: #444444;
   padding: 6px 0 4px;
 }
