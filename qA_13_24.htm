@@ -48,7 +48,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11");
+    recordHotspotInteraction("showQuestion", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11","multichoice");
 
   }
 
@@ -75,11 +75,11 @@
 
     if(sum < 7) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11", "false",answer);
+      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11","multichoice", "false",answer);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11", "true",answer);
+      recordHotspotInteraction("checkQuestion","Vilken information behöver personalen på operationsenheten?", "Film A  Question A11","multichoice", "true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -93,7 +93,7 @@
       document.getElementById("c5").checked = true;
       document.getElementById("c6").checked = true;
       document.getElementById("c7").checked = false;
-      recordHotspotInteraction("showSolution","Vilken information behöver personalen på operationsenheten?", "Film A  Question A7");
+      recordHotspotInteraction("showSolution","Vilken information behöver personalen på operationsenheten?", "Film A  Question A7","multichoice");
   }
 
 
@@ -101,7 +101,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_24");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11");
+    recordHotspotInteraction("showNext", "Vilken information behöver personalen på operationsenheten?","Film A  Question A11","multichoice");
     player.play();
   }
 

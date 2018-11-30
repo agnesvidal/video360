@@ -39,7 +39,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8");
+    recordHotspotInteraction("showQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8","multichoice");
 
   }
 
@@ -50,11 +50,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion", "Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8", "false",document.getElementById("c2Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8", "multichoice","false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8", "true",document.getElementById("c1Label").textContent);
+      recordHotspotInteraction("checkQuestion","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8","multichoice", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
   function showSolution() {
     document.getElementById("c1").checked = true;
     document.getElementById("c2").checked = false;
-    recordInteraction("showSolution", "Film A Question A8");
+      recordHotspotInteraction("showSolution", "Film A Question A8","multichoice");
   }
 
   function tryAgain() {
@@ -72,14 +72,14 @@
     correct = false;
     $("#checkButton").css("display", "inline-block");
     $(".question-evaluation").css("display", "none");
-    recordInteraction("tryAgain", "Film A Question A8");
+      recordHotspotInteraction("tryAgain", "Film A Question A8","multichoice");
   }
 
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_10");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8");
+    recordHotspotInteraction("showNext","Du upptäcker att Robins puls stiger, vad gör du?", "Film A Question A8","multichoice");
 
     player.play();
   }

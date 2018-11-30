@@ -44,7 +44,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3");
+    recordHotspotInteraction("showQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3","multichoice");
 
   }
 
@@ -70,11 +70,11 @@
     var sum = c1 + c2 + c3 + c4 - c5;
     if(sum < 4) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film B Question B3", "false",answer);
+      recordHotspotInteraction("checkQuestion","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film B Question B3", "multichoice","false",answer);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3", "true",answer);
+      recordHotspotInteraction("checkQuestion", "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3", "multichoice","true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -87,14 +87,14 @@
       document.getElementById("c3").checked = true;
       document.getElementById("c4").checked = true;
       document.getElementById("c5").checked = false;
-      recordHotspotInteraction("showSolution","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film A  Question A7");
+      recordHotspotInteraction("showSolution","Vilken utrustning behöver tas med till röntgen? Välj 4 svar.", "Film A  Question A7","multichoice");
   }
 
   function showNext() {
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_07_09");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext",  "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3");
+    recordHotspotInteraction("showNext",  "Vilken utrustning behöver tas med till röntgen? Välj 4 svar.","Film B Question B3","multichoice");
 
     player.play();
   }

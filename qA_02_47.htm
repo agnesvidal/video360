@@ -42,7 +42,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-      recordHotspotInteraction("showQuestion","Vilket bör målvärdet vara för Robins systoliska blodtryck?", "Film A Question A2");
+      recordHotspotInteraction("showQuestion","Vilket bör målvärdet vara för Robins systoliska blodtryck?", "Film A Question A2","multichoice");
 
   }
 
@@ -54,11 +54,11 @@
     var sum = c1 - c2 - c3;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-        recordHotspotInteraction("checkQuestion", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2", "false", c2===1? document.getElementById("c2Label").textContent:document.getElementById("c3Label").textContent);
+        recordHotspotInteraction("checkQuestion", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2","multichoice", "false", c2===1? document.getElementById("c2Label").textContent:document.getElementById("c3Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-        recordHotspotInteraction("checkQuestion","Vilket bör målvärdet vara för Robins systoliska blodtryck?", "Film A Question A2", "true",document.getElementById("c1Label").textContent);
+        recordHotspotInteraction("checkQuestion","Vilket bör målvärdet vara för Robins systoliska blodtryck?", "Film A Question A2","multichoice", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -68,7 +68,7 @@
     document.getElementById("c1").checked = true;
     document.getElementById("c2").checked = false;
     document.getElementById("c3").checked = false;
-      recordHotspotInteraction("showSolution", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2");
+      recordHotspotInteraction("showSolution", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2","multichoice");
   }
 
   function tryAgain() {
@@ -85,7 +85,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_02_47");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2");
+    recordHotspotInteraction("showNext", "Vilket bör målvärdet vara för Robins systoliska blodtryck?","Film A Question A2","multichoice");
 
     player.play();
   }

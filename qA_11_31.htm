@@ -37,7 +37,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Du vill att Robins kroppstemperatur är", "Film A Question A6");
+    recordHotspotInteraction("showQuestion","Du vill att Robins kroppstemperatur är", "Film A Question A6","multichoice");
 
   }
 
@@ -49,11 +49,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-        recordHotspotInteraction("checkQuestion","Du vill att Robins kroppstemperatur är",  "Film A Question A6", "false",document.getElementById("c2Label").textContent);
+        recordHotspotInteraction("checkQuestion","Du vill att Robins kroppstemperatur är",  "Film A Question A6","multichoice", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-        recordHotspotInteraction("checkQuestion", "Du vill att Robins kroppstemperatur är", "Film A Question A6", "true"),document.getElementById("c1Label").textContent;
+        recordHotspotInteraction("checkQuestion", "Du vill att Robins kroppstemperatur är", "Film A Question A6", "multichoice","true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_11_31");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext", "Du vill att Robins kroppstemperatur är", "Film A Question A6");
+    recordHotspotInteraction("showNext", "Du vill att Robins kroppstemperatur är", "Film A Question A6","multichoice");
 
     player.play();
   }

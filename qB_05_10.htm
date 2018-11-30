@@ -37,7 +37,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1");
+    recordHotspotInteraction("showQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1","multichoice");
     toggleRecording(true);
   }
 
@@ -49,11 +49,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "false",document.getElementById("c2Label").textContent);
+      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "multichoice","false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "true",document.getElementById("c1Label").textContent);
+      recordHotspotInteraction("checkQuestion","Varför ges injektion Cyklokapron (Tranexamsyra).", "Film B Question B1", "multichoice","true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_05_10");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext", "Varför ges injektion Cyklokapron (Tranexamsyra).","Film B Question B1");
+    recordHotspotInteraction("showNext", "Varför ges injektion Cyklokapron (Tranexamsyra).","Film B Question B1","multichoice");
 
     if(!correct) {
       currentVideo = "videoA";

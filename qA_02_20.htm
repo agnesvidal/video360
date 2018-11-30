@@ -39,7 +39,7 @@
         $(".question-wrapper").css("display", "block");
         $(".clickHotspot").css("display", "none");
         setTimeout(function() { player.pause(); }, 100);
-        recordHotspotInteraction("showQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1");
+        recordHotspotInteraction("showQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1","multichoice");
         //toggleRecording(true);
     }
 
@@ -51,11 +51,11 @@
         var sum = c1 - c2;
         if(sum < 1) {
             $(".question-evaluation-notice").html("Fel");
-            recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1", "false",document.getElementById("c2Lablel").textContent);
+            recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1","multichoice", "false",document.getElementById("c2Lablel").textContent);
             correct = false;
         } else {
             $(".question-evaluation-notice").html("Rätt");
-            recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1", "true",document.getElementById("c1Lablel").textContent);
+            recordHotspotInteraction("checkQuestion","Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?", "Film A Question A1", "multichoice","true",document.getElementById("c1Lablel").textContent);
             correct = true;
         }
         $(".question-evaluation").css("display", "block");
@@ -65,7 +65,7 @@
         $(".hotspot-wrapper").css("display", "none");
         player.pnlmViewer.removeHotSpot("qA_02_20");
         playButton.style.display = "block";
-        recordHotspotInteraction("showNext", "Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?","Film A Question A1");
+        recordHotspotInteraction("showNext", "Missförstånd beror ofta på kommunikationsbrister. Vad innebär closed-loop communication?","Film A Question A1","multichoice");
         //recordSpeech("Film A Question A1");
         player.play();
     }

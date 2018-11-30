@@ -37,7 +37,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2");
+    recordHotspotInteraction("showQuestion","Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2","multichoice");
 
   }
 
@@ -49,11 +49,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2", "false",document.getElementById("c2Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2","multichoice", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2", "true",document.getElementById("c1Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Hur planerar du fortsatt vård/undersökning och varför?", "Film B Question B2","multichoice", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qB_05_39");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext","Hur planerar du fortsatt vård/undersökning och varför?",  "Film B Question B2");
+    recordHotspotInteraction("showNext","Hur planerar du fortsatt vård/undersökning och varför?",  "Film B Question B2","multichoice");
 
     player.play();
   }

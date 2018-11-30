@@ -25,9 +25,10 @@
       <button type="button" id="checkButton" onclick="checkQuestion()">Check</button>
       <div class="question-evaluation">
         <div class="question-evaluation-notice"></div>
+        <button type="button" id="solutionButton" onclick="showSolution()">Visa lösning</button>
         <button type="button" id="nextButton" onclick="showNext()">Nästa</button>
         <!--<button type="button" id="againButton" onclick="tryAgain()">Try again</button>-->
-        <button type="button" id="solutionButton" onclick="showSolution()">Visa lösning</button>
+
         <div style="clear: both;"></div>
       </div>
     </div>
@@ -45,7 +46,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7");
+    recordHotspotInteraction("showQuestion", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7","multichoice");
 
   }
 
@@ -68,11 +69,11 @@
     var sum = c1 - c2 + c3 + c4 - c5;
     if(sum < 3) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7", "false",answer);
+      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7","multichoice", "false",answer);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7", "true",answer);
+      recordHotspotInteraction("checkQuestion","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7","multichoice", "true",answer);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -84,7 +85,7 @@
     document.getElementById("c3").checked = true;
     document.getElementById("c4").checked = true;
     document.getElementById("c5").checked = false;
-      recordHotspotInteraction("showSolution", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7");
+      recordHotspotInteraction("showSolution", "Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:","Film A  Question A7","multichoice");
   }
 
   function tryAgain() {
@@ -103,7 +104,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_12_08");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7");
+    recordHotspotInteraction("showNext","Under prehospital- och hospital traumavård ska den dödliga triaden i möjligaste mån undvikas/behandlas. Vad ingår i triaden?, välj tre tillstånd:", "Film A  Question A7","multichoice");
 
     if(correct) {
       currentVideo = "videoB";

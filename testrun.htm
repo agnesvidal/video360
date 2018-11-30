@@ -300,6 +300,27 @@
         });
 
 
+
+
+        //VIDEO CONTROLS ACTIONS
+        player.on("play", function (e) {
+            recordVideoControlsInteractions("PLAY")
+        });
+
+        player.on("pause", function (e) {
+            recordVideoControlsInteractions("PAUSE")
+        });
+
+        player.on("seeking", function (e) {
+            recordVideoControlsInteractions("SEEKING")
+        });
+
+
+        player.on("seeked", function (e) {
+            recordVideoControlsInteractions("SEEKED")
+        });
+
+
         // Listen to timeupdates
         player.on('timeupdate', function() {
 
@@ -710,6 +731,8 @@
 
     });
 
+
+
     // Load HotSpot HTML and Scripts from external file
     function loadHotspot(hotSpotDiv, args) {
         //$(".hotspot-wrapper").remove();
@@ -718,10 +741,10 @@
     }
 
     // Save interaction data in array
-    function recordHotspotInteraction(action, questionName,questionId, evaluation,answer) {
+    function recordHotspotInteraction(action, questionName,questionId,questionType, evaluation,answer) {
         var action = action || "none";
         var questionId = questionId || "none";
-        var evaluation = evaluation || "none";
+        var evaluation = evaluation || null;
         var answer = answer || "none";
 
 
@@ -730,6 +753,7 @@
             studyId:localStorage.getItem("studyId"),
             groupName:localStorage.getItem("group"),
             questionId:questionId,
+            questionType:questionType,
             questionName:questionName,
             action:action,
             evaluation:{correct:evaluation,answer:answer},
@@ -750,6 +774,33 @@
             }
         });
 
+
+    }
+
+
+
+
+
+    function recordVideoControlsInteractions(action){
+        var controlsData = {
+            scenarioId:localStorage.getItem("scenarioId"),
+            studyId:localStorage.getItem("studyId"),
+            groupName:localStorage.getItem("group"),
+            action:action,
+            timeline:player.currentTime()};
+
+        $.ajax({
+            url: SERVER_URL + "/data/video-controls",
+            type: "post",
+            data:controlsData,
+            success: function(result) {
+//                  console.log(result);
+
+            },
+            error: function(message) {
+                console.log(message);
+            }
+        });
 
     }
 

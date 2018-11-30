@@ -37,7 +37,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9");
+    recordHotspotInteraction("showQuestion","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9","multichoice");
 
   }
 
@@ -49,11 +49,11 @@
     var sum = c2 - c1;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9", "false",document.getElementById("c2Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9","multichoice", "false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9", "true",document.getElementById("c1Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?","Film A Question A9","multichoice", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -63,7 +63,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_13_41");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9");
+    recordHotspotInteraction("showNext","Massiv blodtransfusion ges vid blödningschock för att behålla blodets normala egenskaper, i vilken proportion ges detta i Sverige?", "Film A Question A9","multichoice");
 
     if(correct) {
       currentVideo = "videoB";

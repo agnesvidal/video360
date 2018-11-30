@@ -39,7 +39,7 @@
     $(".question-wrapper").css("display", "block");
     $(".clickHotspot").css("display", "none");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5");
+    recordHotspotInteraction("showQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5","multichoice");
 
   }
 
@@ -50,11 +50,11 @@
     var sum = c1 - c2;
     if(sum < 1) {
       $(".question-evaluation-notice").html("Fel");
-      recordHotspotInteraction("checkQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5", "false",document.getElementById("c2Label").textContent);
+      recordHotspotInteraction("checkQuestion","Vad väljer du för anestesiläkemedel?", "Film A Question A5", "multichoice","false",document.getElementById("c2Label").textContent);
       correct = false;
     } else {
       $(".question-evaluation-notice").html("Rätt");
-      recordHotspotInteraction("checkQuestion", "Vad väljer du för anestesiläkemedel?","Film A Question A5", "true",document.getElementById("c1Label").textContent);
+      recordHotspotInteraction("checkQuestion", "Vad väljer du för anestesiläkemedel?","Film A Question A5","multichoice", "true",document.getElementById("c1Label").textContent);
       correct = true;
     }
     $(".question-evaluation").css("display", "block");
@@ -79,7 +79,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_10_52");
     playButton.style.display = "block";
-      recordHotspotInteraction("showNext", "Vad väljer du för anestesiläkemedel?", "Film A Question A5");
+      recordHotspotInteraction("showNext", "Vad väljer du för anestesiläkemedel?", "Film A Question A5","multichoice");
 
     player.play();
   }

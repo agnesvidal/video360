@@ -30,7 +30,7 @@
     $("#checkButton").css("display", "none");
     $(".question-evaluation").css("display", "block");
     setTimeout(function() { player.pause(); }, 100);
-    recordHotspotInteraction("showQuestion","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b");
+    recordHotspotInteraction("showQuestion","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b","reflection");
 
   }
 
@@ -38,7 +38,7 @@
     $(".hotspot-wrapper").css("display", "none");
     player.pnlmViewer.removeHotSpot("qA_03_09");
     playButton.style.display = "block";
-    recordHotspotInteraction("showNext","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b");
+    recordHotspotInteraction("showNext","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b","reflection");
 
       //recordHotspotInteraction("checkQuestion","Reflektera över vad du behöver förbereda innan Robin anländer med ambulansen.", "Film A Question A1b", "true",document.getElementById("c1Label").textContent);
 
